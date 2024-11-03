@@ -14,3 +14,13 @@
     background-color: #f9fbff;
   }
 }
+
+@layer components {
+  .input-box {
+    @apply w-full text-sm bg-transparent rounded outline-none border-[1.5px] mb-4 px-5 py-3;
+  }
+
+  .btn-primary {
+    @apply w-full text-sm bg-primary text-white rounded hover:bg-blue-600 p-2;
+  }
+}
