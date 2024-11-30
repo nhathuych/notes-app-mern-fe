@@ -23,4 +23,12 @@
   .btn-primary {
     @apply w-full text-sm bg-primary text-white rounded hover:bg-blue-600 p-2;
   }
+
+  .icon-btn {
+    @apply text-xl text-slate-300 cursor-pointer hover:text-primary;
+  }
+
+  .input-label {
+    @apply text-xs text-slate-400;
+  }
 }

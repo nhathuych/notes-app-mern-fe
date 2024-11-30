@@ -1,5 +1,5 @@
 import React from 'react'
-import { getInitialsName } from '../ultils/helpers'
+import { getInitialsName } from '../../ultils/helpers'
 
 function ProfileInfo({ handleLogout }) {
   return (
