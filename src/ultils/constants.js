@@ -9,8 +9,8 @@ export const API_URLS = {
   create_user: '/create-user',
   get_user: '/get-user',
   add_note: '/add-note',
-  update_note: '/update-note',
+  update_note: '/update-note/',
   all_notes: '/all-notes',
-  delete_note: '/delete-note',
-  toggle_note_pinned: '/toggle-note-pinned',
+  delete_note: '/delete-note/',
+  toggle_note_pinned: '/toggle-note-pinned/',
 }

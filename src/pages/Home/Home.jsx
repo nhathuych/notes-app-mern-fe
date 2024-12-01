@@ -7,6 +7,7 @@ import axiosInstance from '../../ultils/axiosInstance'
 import { API_URLS } from '../../ultils/constants'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../../components/Navbar/Navbar'
+import Toast from '../../components/Toast/Toast'
 
 function Home() {
   const [editNotesModal, setEditNotesModal] = useState({
@@ -15,8 +16,27 @@ function Home() {
     data: null
   })
 
+  const [toast, setToast] = useState({
+    isShown: false,
+    type: 'add',
+    message: ''
+  })
+
   const [userInfo, setUserInfo] = useState(null)
-  const navigate = useNavigate
+  const [allNotes, setAllNotes] = useState()
+  const navigate = useNavigate()
+
+  const showToastMessage = (message, type) => {
+    setToast({ isShown: true, type, message })
+  }
+
+  const handleCloseToast = () => {
+    setToast({ isShown: false, message: '' })
+  }
+
+  const handleEditNote = (note) => {
+    setEditNotesModal({ isShown: true, type: 'edit', data: note })
+  }
 
   const getUserInfo = async () => {
     try {
@@ -25,15 +45,59 @@ function Home() {
         setUserInfo(response.data.data)
       }
     } catch(error) {
-      if (error.response.status != 200) {
+      if (error.response.error) {
         localStorage.clear()
         navigate('/login')
       }
     }
   }
 
+  const getAllNotes = async () => {
+    try {
+      const response = await axiosInstance.get(API_URLS.all_notes)
+
+      if (response?.data?.data) {
+        setAllNotes(response.data.data)
+      }
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
+  const deleteNote = async (note) => {
+    const result = confirm('Want to delete ?')
+    if (!result) return
+
+    try {
+      const noteId = note._id.toString()
+      const response = await axiosInstance.delete(API_URLS.delete_note + noteId)
+
+      if (response.status == 200) {
+        showToastMessage('Note deleted successfull.', 'delete')
+        getAllNotes()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const toggleNotePinned = async (note) => {
+    try {
+      const noteId = note._id.toString()
+      const response = await axiosInstance.put(API_URLS.toggle_note_pinned + noteId, { isPinned: !note.isPinned })
+
+      if (response.status == 200) {
+        showToastMessage('Note pinned successfull.', 'delete')
+        getAllNotes()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     getUserInfo()
+    getAllNotes()
   }, [])
 
   return (
@@ -42,16 +106,19 @@ function Home() {
 
       <div className='container mx-auto'>
         <div className='grid grid-cols-3 gap-4 mt-8'>
-          <NoteCard
-            title='Learn reactjs'
-            date='1rd Oct 2024'
-            content='Do Notes app using MEARN...'
-            tags='#learning'
-            isPinned={true}
-            onEdit={() => {}}
-            onDelete={() => {}}
-            onPinNote={() => {}}
-          />
+          {allNotes?.map((note, index) => (
+            <NoteCard
+              key={note._id}
+              title={note.title}
+              date={note.createdAt}
+              content={note.content}
+              tags={note.tags}
+              isPinned={note.isPinned}
+              onEdit={() => handleEditNote(note)}
+              onDelete={() => {deleteNote(note)}}
+              onPinNote={() => {toggleNotePinned(note)}}
+            />
+          ))}
         </div>
       </div>
 
@@ -78,13 +145,21 @@ function Home() {
       >
         <AddEditNotes
           type={editNotesModal.type}
-          noteData={editNotesModal.noteData}
+          noteData={editNotesModal.data}
+          getAllNotes={getAllNotes}
+          showToastMessage={showToastMessage}
           onCloseModal={() => {
             setEditNotesModal({isShown: false, type: 'add', data: null})
           }}
         />
       </Modal>
 
+      <Toast
+        isShown={toast.isShown}
+        type={toast.type}
+        message={toast.message}
+        onClose={handleCloseToast}
+      />
     </div>
   )
 }
