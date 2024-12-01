@@ -3,7 +3,7 @@ import ProfileInfo from '../ProfileInfo/ProfileInfo'
 import { useNavigate } from 'react-router-dom'
 import SearchBar from '../SearchBar/SearchBar'
 
-function Navbar() {
+function Navbar({ userInfo }) {
   // a hook of the react-router-dom lib
   // using to navigate pages without loading them
   const navigate = useNavigate()
@@ -11,6 +11,7 @@ function Navbar() {
   const [searchQuery, setSearchQuery] = useState('')
 
   const handleLogout = () => {
+    localStorage.clear()
     navigate('/login')
   }
 
@@ -33,7 +34,7 @@ function Navbar() {
         onSearchClear={handleSearchClear}
       />
 
-      <ProfileInfo handleLogout={handleLogout}/>
+      <ProfileInfo userInfo={userInfo} handleLogout={handleLogout}/>
     </div>
   )
 }

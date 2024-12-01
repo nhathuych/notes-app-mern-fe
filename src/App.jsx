@@ -7,11 +7,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 const routes = (
   <Router>
-    {
+    {/* {
       // useNavigate() may be used only in the context of a <Router> component.
       // => Navbar have to called inside Router component
     }
-    <Navbar/>
+    <Navbar/> */}
 
     <Routes>
       <Route path='/login' element={<Login/>} />
