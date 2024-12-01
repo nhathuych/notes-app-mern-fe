@@ -8,6 +8,8 @@ import { API_URLS } from '../../ultils/constants'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../../components/Navbar/Navbar'
 import Toast from '../../components/Toast/Toast'
+import EmptyNoteCard from '../../components/EmptyCard/EmptyNoteCard'
+import NewNodeImage from '../../assets/notepad-checklist.svg'
 
 function Home() {
   const [editNotesModal, setEditNotesModal] = useState({
@@ -23,7 +25,7 @@ function Home() {
   })
 
   const [userInfo, setUserInfo] = useState(null)
-  const [allNotes, setAllNotes] = useState()
+  const [allNotes, setAllNotes] = useState([])
   const navigate = useNavigate()
 
   const showToastMessage = (message, type) => {
@@ -120,6 +122,13 @@ function Home() {
             />
           ))}
         </div>
+
+        {allNotes.length == 0 &&
+          <EmptyNoteCard
+            imgSrc={NewNodeImage}
+            message='Click the add button below to start creating your first note.'
+          />
+        }
       </div>
 
       <button
