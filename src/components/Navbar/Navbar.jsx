@@ -3,7 +3,7 @@ import ProfileInfo from '../ProfileInfo/ProfileInfo'
 import { useNavigate } from 'react-router-dom'
 import SearchBar from '../SearchBar/SearchBar'
 
-function Navbar({ userInfo }) {
+function Navbar({ userInfo, onSearchNotes, handleClearSearch }) {
   // a hook of the react-router-dom lib
   // using to navigate pages without loading them
   const navigate = useNavigate()
@@ -15,10 +15,15 @@ function Navbar({ userInfo }) {
     navigate('/login')
   }
 
-  const handleSearch = () => {}
+  const handleSearch = () => {
+    if (searchQuery) {
+      onSearchNotes(searchQuery)
+    }
+  }
 
   const handleSearchClear = () => {
     setSearchQuery('')
+    handleClearSearch()
   }
 
   return (

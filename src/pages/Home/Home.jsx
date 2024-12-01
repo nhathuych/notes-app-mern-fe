@@ -10,6 +10,7 @@ import Navbar from '../../components/Navbar/Navbar'
 import Toast from '../../components/Toast/Toast'
 import EmptyNoteCard from '../../components/EmptyCard/EmptyNoteCard'
 import NewNodeImage from '../../assets/notepad-checklist.svg'
+import NoDataImage from '../../assets/no-data.svg'
 
 function Home() {
   const [editNotesModal, setEditNotesModal] = useState({
@@ -26,6 +27,7 @@ function Home() {
 
   const [userInfo, setUserInfo] = useState(null)
   const [allNotes, setAllNotes] = useState([])
+  const [isSeaching, setIsSearching] = useState(false)
   const navigate = useNavigate()
 
   const showToastMessage = (message, type) => {
@@ -97,6 +99,22 @@ function Home() {
     }
   }
 
+  const onSearchNotes = async (query) => {
+    try {
+      const response = await axiosInstance.get(API_URLS.search_notes, { params: { query } })
+
+      setAllNotes(response.data.data)
+      setIsSearching(true)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleClearSearch = () => {
+    getAllNotes()
+    setIsSearching(false)
+  }
+
   useEffect(() => {
     getUserInfo()
     getAllNotes()
@@ -104,7 +122,7 @@ function Home() {
 
   return (
     <div>
-      <Navbar userInfo={userInfo} />
+      <Navbar userInfo={userInfo} onSearchNotes={onSearchNotes} handleClearSearch={handleClearSearch} />
 
       <div className='container mx-auto'>
         <div className='grid grid-cols-3 gap-4 mt-8'>
@@ -125,8 +143,8 @@ function Home() {
 
         {allNotes.length == 0 &&
           <EmptyNoteCard
-            imgSrc={NewNodeImage}
-            message='Click the add button below to start creating your first note.'
+            imgSrc={isSeaching ? NoDataImage : NewNodeImage}
+            message={isSeaching ? 'Oops! Note notes found.' : 'Click the add button below to start creating your first note.'}
           />
         }
       </div>

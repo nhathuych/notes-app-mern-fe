@@ -10,6 +10,7 @@ function SearchBar({ value, onChange, handleSearch, onSearchClear }) {
         placeholder='Search notes'
         value={value}
         onChange={onChange}
+        onKeyDown={(event) => { event.key === 'Enter' && handleSearch() }}
         className='text-xs bg-transparent outline-none w-full py-[11px]'
       />
 

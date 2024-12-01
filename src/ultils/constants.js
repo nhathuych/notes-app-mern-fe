@@ -13,4 +13,5 @@ export const API_URLS = {
   all_notes: '/all-notes',
   delete_note: '/delete-note/',
   toggle_note_pinned: '/toggle-note-pinned/',
+  search_notes: '/search-notes',
 }
